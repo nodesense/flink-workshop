@@ -1,0 +1,40 @@
+CREATE TABLE Rainbows (
+    asset STRING,
+    ts TIMESTAMP(3),
+    `fields` ROW (
+        `wave1` VARCHAR,
+        `wave2` VARCHAR,
+        `wave3` VARCHAR,
+        `wave4` VARCHAR,
+        `wave5` VARCHAR,
+        `wave6` VARCHAR,
+        `wave7` VARCHAR,
+        `wave8` VARCHAR,
+        `wave9` VARCHAR,
+        `wave10` VARCHAR,
+        `wave11` VARCHAR,
+        `wave12` VARCHAR,
+        `wave13` VARCHAR,
+        `wave14` VARCHAR,
+        `wave15` VARCHAR,
+        `wave16` VARCHAR,
+        `wave17` VARCHAR,
+        `wave18` VARCHAR,
+        `wave19` VARCHAR,
+        `wave20` VARCHAR,
+        `wave21` VARCHAR,
+        `wave22` VARCHAR,
+        `wave23` VARCHAR,
+        `wave24` VARCHAR,
+        `adiff` DOUBLE,
+        `sdiff` DOUBLE,
+        `signal` DOUBLE
+    )
+) WITH (
+ 'connector' = 'filesystem',
+ 'format' = 'json',
+ 'json.fail-on-missing-field' = 'false',
+ 'json.ignore-parse-errors' = 'true',
+ 'path' = 'file:///media/krish/IntelNVMe/truedata/flink-json-results',
+ 'json.timestamp-format.standard' = 'ISO-8601'
+);

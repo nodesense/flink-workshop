@@ -1,0 +1,3 @@
+
+workshop.connectors.SocketDynamicTableFactory
+workshop.connectors.ChangelogCsvFormatFactory
