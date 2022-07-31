@@ -103,3 +103,4 @@ replay_pid*
 
 target/
 outputs/
+provided-libs

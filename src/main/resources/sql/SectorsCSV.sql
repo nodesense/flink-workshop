@@ -7,7 +7,7 @@ CREATE TABLE Sectors (
 ) WITH (
  'connector' = 'filesystem',
  'format' = 'csv',
- 'path' = '/home/krish/IdeaProjects/FlinkDemo/data/nifty50-stocks.csv',
+ 'path' = 'data/nifty50-stocks.csv',
  'csv.ignore-parse-errors' = 'true',
   'csv.allow-comments' = 'true'
 );
