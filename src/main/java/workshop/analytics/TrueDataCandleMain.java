@@ -1,6 +1,7 @@
 package workshop.analytics;
 
 
+import org.apache.flink.streaming.api.CheckpointingMode;
 import workshop.models.TrueDataTick;
 import workshop.models.Candle;
 import org.apache.flink.api.common.eventtime.*;
@@ -21,6 +22,20 @@ public class TrueDataCandleMain {
     public static void main(String[] args) throws  Exception {
         // set up the Java DataStream API
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+
+//        // start a checkpoint every 1000 ms
+    env.enableCheckpointing(10000);
+//
+//
+//        // set mode to exactly-once (this is the default)
+     env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+//
+//        // sets the checkpoint storage where checkpoint snapshots will be written
+//        // shall use hdfs host name
+    env.getCheckpointConfig().setCheckpointStorage("hdfs://localhost:9000/flink/checkpoints/candle23");
+
+
         // EnvironmentSettings env = EnvironmentSettings.inStreamingMode();
         // StreamExecutionEnvironment env
          env.getConfig().setAutoWatermarkInterval(Duration.ofMillis(100).toMillis());
@@ -160,79 +175,79 @@ public class TrueDataCandleMain {
         tableEnv.executeSql(CandleKafka);
 
         tableEnv.executeSql("INSERT INTO CandleKafka SELECT `asset`, st, et, O, C, H, L, A ,DT, V, TA,  GapC, Gap , GapL , GapH, OI, OIDiff, OIGap, UN, N50, N50T, BNF, BNFT FROM TempCandles");
-
-
-        String TotalAggregateKafka = SqlText.getSQL("/sql/TotalAggregateKafka.sql");
-        System.out.println(TotalAggregateKafka);
-
-        tableEnv.executeSql(TotalAggregateKafka);
-
-        final Table result1 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK EQ' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  BNF=1 GROUP BY DT, st, et");
-        // result1.execute().print();
-
-        tableEnv.createTemporaryView("NIFTYBANKEQAggregate", result1);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKEQAggregate");
-
-        // Sum all volumes, TA based on various interests and union the results, write back again..
-        // Sum volumes for equities for N50
-        final Table result2 =  tableEnv.sqlQuery("SELECT CONCAT('NIFTY 50 EQ','') as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  N50=1 GROUP BY DT, st, et");
-       // result2.execute().print();
-
-        tableEnv.createTemporaryView("NIFTY50EQAggregate", result2);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50EQAggregate");
-
-        final Table result3 =  tableEnv.sqlQuery("SELECT 'NIFTY 50 CE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='CE' and  UN='NIFTY 50' GROUP BY DT, st, et");
-       // result3.execute().print();
-
-
-        tableEnv.createTemporaryView("NIFTY50CEAggregate", result3);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50CEAggregate");
-
-
-        final Table result4 =  tableEnv.sqlQuery("SELECT 'NIFTY 50 PE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='PE' and  UN='NIFTY 50' GROUP BY DT, st, et");
-      //  result4.execute().print();
-
-        tableEnv.createTemporaryView("NIFTY50PEAggregate", result4);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50PEAggregate");
-
-        final Table result5 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK PE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='PE' and  UN='NIFTY BANK' GROUP BY DT, st, et");
-        // result5.execute().print();
-
-        tableEnv.createTemporaryView("NIFTYBANKPEAggregate", result5);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKPEAggregate");
-
-        final Table result6 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK CE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='CE' and  UN='NIFTY BANK' GROUP BY DT, st, et");
-       // result6.execute().print();
-
-        tableEnv.createTemporaryView("NIFTYBANKCEAggregate", result6);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKCEAggregate");
-
-        final Table result7 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK FU' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='FU' and  UN='NIFTY BANK' GROUP BY DT, st, et");
-       //  result7.execute().print();
-
-        tableEnv.createTemporaryView("NIFTYBANKFUAggregate", result7);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKFUAggregate");
-
-        final Table result8 =  tableEnv.sqlQuery("SELECT 'NIFTY FU' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='FU' and  UN='NIFTY 50' GROUP BY DT, st, et");
-     //   result5.execute().print();
-
-        tableEnv.createTemporaryView("NIFTYFUAggregate", result8);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYFUAggregate");
-
-        final Table result9 =  tableEnv.sqlQuery("SELECT 'NIFTY 50T' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  N50T=1 GROUP BY DT, st, et");
-        //result9.execute().print();
-
-
-        tableEnv.createTemporaryView("NIFTY50T", result9);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50T");
-
-
-        final Table result10 =  tableEnv.sqlQuery("SELECT 'NIFTY BANKT' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  BNFT=1 GROUP BY DT, st, et");
-        //result9.execute().print();
-
-
-        tableEnv.createTemporaryView("NIFTYBANKT", result10);
-        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKT");
+//
+//
+//        String TotalAggregateKafka = SqlText.getSQL("/sql/TotalAggregateKafka.sql");
+//        System.out.println(TotalAggregateKafka);
+//
+//        tableEnv.executeSql(TotalAggregateKafka);
+//
+//        final Table result1 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK EQ' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  BNF=1 GROUP BY DT, st, et");
+//        // result1.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTYBANKEQAggregate", result1);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKEQAggregate");
+//
+//        // Sum all volumes, TA based on various interests and union the results, write back again..
+//        // Sum volumes for equities for N50
+//        final Table result2 =  tableEnv.sqlQuery("SELECT CONCAT('NIFTY 50 EQ','') as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  N50=1 GROUP BY DT, st, et");
+//       // result2.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTY50EQAggregate", result2);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50EQAggregate");
+//
+//        final Table result3 =  tableEnv.sqlQuery("SELECT 'NIFTY 50 CE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='CE' and  UN='NIFTY 50' GROUP BY DT, st, et");
+//       // result3.execute().print();
+//
+//
+//        tableEnv.createTemporaryView("NIFTY50CEAggregate", result3);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50CEAggregate");
+//
+//
+//        final Table result4 =  tableEnv.sqlQuery("SELECT 'NIFTY 50 PE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='PE' and  UN='NIFTY 50' GROUP BY DT, st, et");
+//      //  result4.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTY50PEAggregate", result4);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50PEAggregate");
+//
+//        final Table result5 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK PE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='PE' and  UN='NIFTY BANK' GROUP BY DT, st, et");
+//        // result5.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTYBANKPEAggregate", result5);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKPEAggregate");
+//
+//        final Table result6 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK CE' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='CE' and  UN='NIFTY BANK' GROUP BY DT, st, et");
+//       // result6.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTYBANKCEAggregate", result6);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKCEAggregate");
+//
+//        final Table result7 =  tableEnv.sqlQuery("SELECT 'NIFTY BANK FU' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='FU' and  UN='NIFTY BANK' GROUP BY DT, st, et");
+//       //  result7.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTYBANKFUAggregate", result7);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKFUAggregate");
+//
+//        final Table result8 =  tableEnv.sqlQuery("SELECT 'NIFTY FU' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff  FROM TempCandles where DT='FU' and  UN='NIFTY 50' GROUP BY DT, st, et");
+//     //   result5.execute().print();
+//
+//        tableEnv.createTemporaryView("NIFTYFUAggregate", result8);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYFUAggregate");
+//
+//        final Table result9 =  tableEnv.sqlQuery("SELECT 'NIFTY 50T' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  N50T=1 GROUP BY DT, st, et");
+//        //result9.execute().print();
+//
+//
+//        tableEnv.createTemporaryView("NIFTY50T", result9);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTY50T");
+//
+//
+//        final Table result10 =  tableEnv.sqlQuery("SELECT 'NIFTY BANKT' as `asset` ,  st, et, DT, sum(V) as V, sum(TA) as TA, avg(OI) as OI, sum(OIDiff) as OIDiff FROM TempCandles where DT='EQ' and  BNFT=1 GROUP BY DT, st, et");
+//        //result9.execute().print();
+//
+//
+//        tableEnv.createTemporaryView("NIFTYBANKT", result10);
+//        tableEnv.executeSql("INSERT INTO TradeAggregates SELECT `asset`, st, et, DT, V, TA, OI, OIDiff FROM NIFTYBANKT");
 
 
 

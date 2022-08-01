@@ -13,7 +13,7 @@ public class S041_ReadNumbersFromFile {
         System.out.println("Parallelism default " + env.getParallelism());
         env.setParallelism(6);
         System.out.println("Parallelism set " + env.getParallelism());
-        DataStream<String> texts = env.readTextFile("/home/rps/flink-workshop/data/mynumbers.txt");
+        DataStream<String> texts = env.readTextFile("data/mynumbers.txt");
 
         // action
         texts.print(); // it use PrintFunction internally connector called print

@@ -11,7 +11,7 @@ CREATE TABLE TradeAggregates (
 ) WITH (
   'connector' = 'upsert-kafka',
   'topic' = 'stock-aggregates2',
-  'properties.bootstrap.servers' = 'localhost:9092',
+  'properties.bootstrap.servers' = 'broker:9092',
   'value.format' = 'json',
   'key.format' = 'json',
   'value.json.timestamp-format.standard' = 'ISO-8601'

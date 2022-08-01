@@ -31,6 +31,7 @@ public class S011_WordCountTuple {
 
         System.out.println("Printing result to stdout. Use --output to specify output path.");
         counts.print();
+         
 
     }
     public static final class Tokenizer

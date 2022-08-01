@@ -1,7 +1,9 @@
 package workshop.table;
 
+import org.apache.flink.api.java.functions.IdPartitioner;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.ExplainDetail;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
 import workshop.models.Sector;
@@ -38,6 +40,8 @@ public class S034_FlinkCSVExample {
         // Sector.class is java reflection, meta class, used for instantation, casting purpose
         DataStream<Sector> sectorStream = tableEnv.toDataStream(sectorsTable, Sector.class);
 
+
+
         sectorStream.print();
 
         // we can also create table/temp view from data stream
@@ -54,6 +58,9 @@ public class S034_FlinkCSVExample {
         t.printSchema();
         t.execute().print();
 
+        String plan =  t.explain(ExplainDetail.CHANGELOG_MODE);
+
+        System.out.println("PLAN " + plan);
           env.execute();
 
     }

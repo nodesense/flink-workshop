@@ -30,9 +30,9 @@ CREATE TABLE TrueDataTicks (
          Ask_Qty BIGINT
 ) WITH (
   'connector' = 'kafka',
-   'topic' = 'nse-live-ticks3',
-   'properties.bootstrap.servers' = 'localhost:9092',
-    'properties.group.id' = 'my-candle-consumer-group2',
+   'topic' = 'nse-live-ticks-simulate',
+   'properties.bootstrap.servers' = 'broker:9092',
+    'properties.group.id' = 'my-candle-consumer-group4',
      'scan.startup.mode' = 'latest-offset',
    'value.format' = 'json',
    'value.json.timestamp-format.standard' = 'ISO-8601'

@@ -30,7 +30,8 @@ CREATE TABLE CandleKafka (
 ) WITH (
   'connector' = 'kafka',
   'topic' = 'candles-live2',
-  'properties.bootstrap.servers' = 'localhost:9092',
+  'properties.client.id' = 'producer-111',
+  'properties.bootstrap.servers' = 'broker:9092',
   'value.format' = 'json',
   'value.json.timestamp-format.standard' = 'ISO-8601'
 );

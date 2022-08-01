@@ -79,3 +79,14 @@ For code sharing..
 
 https://bit.ly/3ON1RVs
 
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:49275 \
+--detached \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.analytics.TrueDataCandleMain \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
