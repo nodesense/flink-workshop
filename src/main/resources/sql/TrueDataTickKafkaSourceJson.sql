@@ -30,7 +30,7 @@ CREATE TABLE TrueDataTicks (
          Ask_Qty BIGINT
 ) WITH (
   'connector' = 'kafka',
-   'topic' = 'nse-live-ticks-simulate',
+   'topic' = 'nse-live-ticks-simulate4',
    'properties.bootstrap.servers' = 'broker:9092',
     'properties.group.id' = 'my-candle-consumer-group4',
      'scan.startup.mode' = 'latest-offset',
