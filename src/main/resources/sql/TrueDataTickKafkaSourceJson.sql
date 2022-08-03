@@ -32,7 +32,7 @@ CREATE TABLE TrueDataTicks (
   'connector' = 'kafka',
    'topic' = 'nse-live-ticks-simulate4',
    'properties.bootstrap.servers' = 'broker:9092',
-    'properties.group.id' = 'my-candle-consumer-group4',
+    'properties.group.id' = 'my-candle-consumer-group5',
      'scan.startup.mode' = 'latest-offset',
    'value.format' = 'json',
    'value.json.timestamp-format.standard' = 'ISO-8601'

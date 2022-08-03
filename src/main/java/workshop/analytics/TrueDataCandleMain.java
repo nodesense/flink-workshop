@@ -34,7 +34,7 @@ public class TrueDataCandleMain {
 //        // sets the checkpoint storage where checkpoint snapshots will be written
 //        // shall use hdfs host name
     //env.getCheckpointConfig().setCheckpointStorage("file:///nfs/checkpoint/candle");
-        env.getCheckpointConfig().setCheckpointStorage("hdfs://namenode:9000/checkpoint/candle");
+        env.getCheckpointConfig().setCheckpointStorage("hdfs://namenode:9000/checkpoint/candle4");
 
 
         // EnvironmentSettings env = EnvironmentSettings.inStreamingMode();

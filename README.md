@@ -90,3 +90,43 @@ $FLINK_HOME/bin/flink run  -m 0.0.0.0:49275 \
 
 $FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.analytics.TrueDataCandleMain \
 ./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.analytics.TrueDataCandleMain \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.table.S031_HelloWorld \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+
+
+
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.stream.S041_ReadNumbersFromFile \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.stream.S046_StreamSQLExample \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.stream.S047_StreamWindowSQLExample \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.table.S034_FlinkCSVExample \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.table.S035_MovieLensAnalytics \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar
+
+
+$FLINK_HOME/bin/flink run  -m 0.0.0.0:8181 -c workshop.hive.HiveCatalogTest \
+./target/FlinkAnalytics-1.0-SNAPSHOT.jar

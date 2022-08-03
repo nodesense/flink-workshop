@@ -50,18 +50,18 @@
 
     <dependencies>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.flink</groupId>-->
-<!--            <artifactId>flink-avro</artifactId>-->
-<!--            <version>${flink.version}</version>-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-avro</artifactId>
+            <version>${flink.version}</version>
 
-<!--        </dependency>-->
+        </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.apache.flink</groupId>-->
-<!--            <artifactId>flink-avro-confluent-registry</artifactId>-->
-<!--            <version>${flink.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-avro-confluent-registry</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
 
 
 <!--        <dependency>-->
@@ -133,6 +133,19 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-java</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-core -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-core</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
         <dependency>
@@ -143,6 +156,23 @@
 
 
 
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-streaming-java -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-streaming-java</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-runtime -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-runtime</artifactId>
+            <version>${flink.version}</version>
+<!--            <scope>test</scope>-->
+        </dependency>
+
+
 
         <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-clients -->
         <dependency>
@@ -151,6 +181,32 @@
             <version>${flink.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-table -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table</artifactId>-->
+<!--            <version>${flink.version}</version>-->
+<!--            <type>pom</type>-->
+<!--&lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
+<!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-table-api-java -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table-api-java</artifactId>-->
+<!--            <version>${flink.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-table-common -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-table-common</artifactId>-->
+<!--            <version>${flink.version}</version>-->
+<!--         <scope>provided</scope>-->
+<!--        </dependency>-->
 
 
 
@@ -160,6 +216,17 @@
             <version>${flink.version}</version>
          <scope>provided</scope>
         </dependency>
+
+<!--        https://issues.apache.org/jira/browse/FLINK-25128-->
+
+
+<!--                <dependency>-->
+<!--                    <groupId>org.apache.flink</groupId>-->
+<!--                    <artifactId>flink-table-planner-loader</artifactId>-->
+<!--                    <version>${flink.version}</version>-->
+<!--                 <scope>provided</scope>-->
+<!--                </dependency>-->
+
 
 
 
@@ -187,19 +254,34 @@
             <scope>provided</scope>
         </dependency>
 
+<!--        -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-shaded-hadoop-2-uber</artifactId>-->
+<!--            <version>2.8.3-10.0</version>-->
+<!--            -->
+<!--        </dependency>-->
+
+
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-connector-hive_2.12</artifactId>
             <version>${flink.version}</version>
-             <scope>provided</scope>
+<!--             <scope>provided</scope>-->
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-api-java-bridge</artifactId>
+            <version>${flink.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.hive</groupId>
             <artifactId>hive-exec</artifactId>
             <version>2.3.6</version>
-             <scope>provided</scope>
+<!--             <scope>provided</scope>-->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.apache.flink/flink-csv -->
@@ -207,7 +289,7 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-csv</artifactId>
             <version>${flink.version}</version>
-                 <scope>provided</scope>
+<!--            <scope>provided</scope> &lt;!&ndash;gopal &ndash;&gt;-->
 <!--            <scope>test</scope>-->
         </dependency>
 
@@ -216,9 +298,38 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-json</artifactId>
             <version>${flink.version}</version>
-               <scope>provided</scope>
+<!--            <scope>provided</scope> &lt;!&ndash;gopal &ndash;&gt;-->
 <!--            <scope>test</scope>-->
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-hdfs -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hadoop</groupId>-->
+<!--            <artifactId>hadoop-hdfs</artifactId>-->
+<!--            <version>2.7.7</version>-->
+<!--&lt;!&ndash;            <scope>test</scope>&ndash;&gt;-->
+<!--        </dependency>-->
+
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.hadoop/hadoop-core &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hadoop</groupId>-->
+<!--            <artifactId>hadoop-core</artifactId>-->
+<!--            <version>1.2.1</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hadoop</groupId>-->
+<!--            <artifactId>hadoop-common</artifactId>-->
+<!--            <version>2.7.7</version>-->
+<!--            &lt;!&ndash;            <scope>test</scope>&ndash;&gt;-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.apache.hadoop</groupId>-->
+<!--            <artifactId>hadoop-client</artifactId>-->
+<!--            <version>2.7.7</version>-->
+<!--&lt;!&ndash;            <scope>provided</scope>&ndash;&gt;-->
+<!--        </dependency>-->
 
 
         <dependency>
@@ -226,7 +337,6 @@
             <artifactId>flink-connector-jdbc</artifactId>
             <version>${flink.version}</version>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -258,23 +368,23 @@
     <build>
         <plugins>
 
-<!--            <plugin>-->
-<!--                <groupId>org.apache.avro</groupId>-->
-<!--                <artifactId>avro-maven-plugin</artifactId>-->
-<!--                <version>${avro.version}</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>generate-sources</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>schema</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>-->
-<!--                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>${avro.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/avro/</sourceDirectory>
+                            <outputDirectory>${project.basedir}/src/main/java/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -308,7 +418,6 @@
                                     <exclude>com.google.code.findbugs:jsr305</exclude>
                                     <exclude>org.slf4j:*</exclude>
                                     <exclude>org.apache.logging.log4j:*</exclude>
-                                    <exclude>org.codehaus.janino</exclude>
                                 </excludes>
                             </artifactSet>
                             <filters>
