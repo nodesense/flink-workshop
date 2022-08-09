@@ -10,7 +10,7 @@ CREATE TABLE TradeAggregates (
   PRIMARY KEY (DT, st, et) NOT ENFORCED
 ) WITH (
   'connector' = 'upsert-kafka',
-  'topic' = 'stock-aggregates4',
+  'topic' = 'stock-aggregates2',
   'properties.bootstrap.servers' = 'broker:9092',
   'value.format' = 'json',
   'key.format' = 'json',

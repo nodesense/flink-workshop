@@ -165,18 +165,17 @@ public class CandleWindowFunction extends  ProcessWindowFunction<TrueDataTick, C
             if (lastTick != null) {
                 double volume = tick.Volume - lastTick.Volume;
                 if (volume >= 0) {
-                    candle.V = volume;
+                    candle.V += volume;
                 } else {
                     // TODO ??
                 }
 
                 double amount = tick.Day_Turnover - lastTick.Day_Turnover;
                 if (amount >= 0) {
-                    candle.TA = amount;
+                    candle.TA += amount;
                 } else {
                     // TODO ??
                 }
-
 
                 candle.OIDiff = (double) (tick.OI - lastTick.OI);
             }

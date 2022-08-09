@@ -119,8 +119,6 @@ public class TickAnalysisMain {
             JsonFileSource<Tick> tickJsonSource = new JsonFileSource<Tick>(env, tableEnv);
             DataStream<Tick>   tickDataStream = tickJsonSource.load (properties);
 
-
-
             // tickDataStream.print();
 
 //            KafkaSourceTemp<Tick> kafkaSource = new KafkaSourceTemp<>(env, tableEnv);
@@ -136,7 +134,6 @@ public class TickAnalysisMain {
 //            DataStream<Tick>  dataValueStreamWithWaterMark = tickDataStream
 //                    .assignTimestampsAndWatermarks(watermarkStrategy);
 
-
             final StreamingFileSink<TickTA> fileSink = StreamingFileSink
                     .forRowFormat(new Path("/home/krish/IdeaProjects/FlinkDemo/outputs"), new SimpleJsonEncoder<TickTA>())
                     .withRollingPolicy(
@@ -147,29 +144,16 @@ public class TickAnalysisMain {
                                     .build())
                     .build();
 
-
             SingleOutputStreamOperator<TickTA> tickTAStream = tickDataStream // dataValueStreamWithWaterMark
                     .filter( tick -> tick.asset.equals("NIFTY 50"))
                     .keyBy( (tick) -> tick.asset )
-                    // .window(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(2)))
-                    // .window(TumblingEventTimeWindows.of(Time.seconds(3)))
-                    // .process(new TAWindow("SMA", 5))
-                    .process(new TickAnalysisWindow("OohMyName.Fun", 30))
-                    ;
+                    .process(new TickRainbowAnalysisWindow("OohMyName.Fun", 30));
 
             tickTAStream.addSink(fileSink);
-
-            PrintSinkFunction<TickTA> printFunction = new PrintSinkFunction<>();
-
-//            tickTAStream
-//                    .filter( tickTA -> ( tickTA.getField("specialCallExit") == 1  || tickTA.getField("enterCall") == 1) || (tickTA.getField("exitCall") == 1) || (tickTA.getField("enterPut") == 1) || (tickTA.getField("exitPut") == 1) )
-//                    .addSink(printFunction);
-
 
             Properties sinkproperties = new Properties();
 
             sinkproperties.setProperty("bootstrap.servers", "localhost:9092");
-
 
             KafkaSink<TickTA> kafkaSink = KafkaSink.<TickTA>builder()
                     .setBootstrapServers("localhost:9092")
@@ -184,7 +168,6 @@ public class TickAnalysisMain {
             Table resultTable = tableEnv.fromDataStream(tickTAStream);
 
             env.execute();
-
         }
     }
 
@@ -194,18 +177,6 @@ public class TickAnalysisMain {
         ta.config(properties);
         ta.process();
 
-//
-//        //InfluxDBConfig influxDBConfig = new InfluxDBConfig.Builder("http://localhost:8086", "root", "root", "db_flink_test")
-//        InfluxDBConfig influxDBConfig = InfluxDBConfig.builder("http://localhost:8086", "myusername", "passwordpasswordpassword", "TickAnalysis30")
-//                .batchActions(1000)
-//                .flushDuration(100, TimeUnit.MILLISECONDS)
-//                .enableGzip(true)
-//                .build();
-
-//
-//        DataStream<InfluxDBPoint> influxDataStream = tickTAStream.map(new TickToInfluxPointFunction());
-//
-//        influxDataStream.addSink(new InfluxDBSink(influxDBConfig));
 
     }
 }

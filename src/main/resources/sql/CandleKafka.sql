@@ -29,7 +29,7 @@ CREATE TABLE CandleKafka (
           BNFT INT
 ) WITH (
   'connector' = 'kafka',
-  'topic' = 'candles-live4',
+  'topic' = 'candles-live2',
   'properties.client.id' = 'producer-111',
   'properties.bootstrap.servers' = 'broker:9092',
   'value.format' = 'json',

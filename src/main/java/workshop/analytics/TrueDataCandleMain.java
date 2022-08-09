@@ -25,21 +25,21 @@ public class TrueDataCandleMain {
 
 
 //        // start a checkpoint every 1000 ms
-    env.enableCheckpointing(10000);
+//    env.enableCheckpointing(10000);
 //
 //
 //        // set mode to exactly-once (this is the default)
-     env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
+  //   env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
 //
 //        // sets the checkpoint storage where checkpoint snapshots will be written
 //        // shall use hdfs host name
     //env.getCheckpointConfig().setCheckpointStorage("file:///nfs/checkpoint/candle");
-        env.getCheckpointConfig().setCheckpointStorage("hdfs://namenode:9000/checkpoint/candle4");
+      //  env.getCheckpointConfig().setCheckpointStorage("hdfs://namenode:9000/checkpoint/candle4");
 
 
         // EnvironmentSettings env = EnvironmentSettings.inStreamingMode();
         // StreamExecutionEnvironment env
-         env.getConfig().setAutoWatermarkInterval(Duration.ofMillis(100).toMillis());
+    //     env.getConfig().setAutoWatermarkInterval(Duration.ofMillis(100).toMillis());
       //  env.getConfig().setLocalTimeZone(ZoneId.of("UTC"));
 
         // set up the Java Table API
