@@ -20,51 +20,48 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Example illustrating the use of {@link org.apache.flink.api.common.state.BroadcastState}.
- */
 public class S053_BroadcastExample {
 
     public static void main(String[] args) throws Exception {
 
         final List<String> input = new ArrayList<>();
-        input.add("1");
-        input.add("2");
-        input.add("3");
-        input.add("4");
+        input.add("region1");
+        input.add("region2");
+        input.add("region3");
+        input.add("region4");
 
-        final List<Tuple2<Integer, Integer>> keyedInput = new ArrayList<>();
-        keyedInput.add(new Tuple2<>(1, 1));
-        keyedInput.add(new Tuple2<>(1, 5));
-        keyedInput.add(new Tuple2<>(2, 2));
-        keyedInput.add(new Tuple2<>(2, 6));
-        keyedInput.add(new Tuple2<>(3, 3));
-        keyedInput.add(new Tuple2<>(3, 7));
-        keyedInput.add(new Tuple2<>(4, 4));
-        keyedInput.add(new Tuple2<>(4, 8));
+        final List<Tuple2<String, String>> keyedInput = new ArrayList<>();
+        keyedInput.add(new Tuple2<>("region1", "user1"));
+        keyedInput.add(new Tuple2<>("region1", "user2"));
+        keyedInput.add(new Tuple2<>("region2", "user3"));
+        keyedInput.add(new Tuple2<>("region2", "user4"));
+        keyedInput.add(new Tuple2<>("region3", "user5"));
+        keyedInput.add(new Tuple2<>("region3", "user6"));
+        keyedInput.add(new Tuple2<>("region4", "user7"));
+        keyedInput.add(new Tuple2<>("region4", "user8"));
 
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        MapStateDescriptor<String, Integer> mapStateDescriptor = new MapStateDescriptor<>(
-                "Broadcast", BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.INT_TYPE_INFO
+        MapStateDescriptor<String, String> mapStateDescriptor = new MapStateDescriptor<>(
+                "Broadcast", BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO
         );
 
-        KeyedStream<Tuple2<Integer, Integer>, Integer> elementStream = env.fromCollection(keyedInput)
+        KeyedStream<Tuple2<String, String>, String> elementStream = env.fromCollection(keyedInput)
                 .rebalance()																			// needed to increase the parallelism
-                .map(new MapFunction<Tuple2<Integer, Integer>, Tuple2<Integer, Integer>>() {
+                .map(new MapFunction<Tuple2<String, String>, Tuple2<String, String>>() {
                     private static final long serialVersionUID = 8710586935083422712L;
 
                     @Override
-                    public Tuple2<Integer, Integer> map(Tuple2<Integer, Integer> value) {
+                    public Tuple2<String, String> map(Tuple2<String, String> value) {
                         return value;
                     }
                 })
                 .setParallelism(4)
-                .keyBy(new KeySelector<Tuple2<Integer, Integer>, Integer>() {
+                .keyBy(new KeySelector<Tuple2<String, String>, String>() {
                     private static final long serialVersionUID = -1110876099102344900L;
 
                     @Override
-                    public Integer getKey(Tuple2<Integer, Integer> value) {
+                    public String getKey(Tuple2<String, String> value) {
                         return value.f0;
                     }
                 });
@@ -84,10 +81,10 @@ public class S053_BroadcastExample {
         DataStream<String> output = elementStream
                 .connect(broadcastStream)
                 .process(
-                        new KeyedBroadcastProcessFunction<String, Tuple2<Integer, Integer>, String, String>() {
+                        new KeyedBroadcastProcessFunction<String, Tuple2<String, String>, String, String>() {
 
                             @Override
-                            public void processElement(Tuple2<Integer, Integer> value, KeyedBroadcastProcessFunction<String, Tuple2<Integer, Integer>, String, String>.ReadOnlyContext ctx, Collector<String> out) throws Exception {
+                            public void processElement(Tuple2<String, String> value, KeyedBroadcastProcessFunction<String, Tuple2<String, String>, String, String>.ReadOnlyContext ctx, Collector<String> out) throws Exception {
                                 String prev = getRuntimeContext().getState(valueState).value();
 
                                 StringBuilder str = new StringBuilder();
@@ -96,7 +93,7 @@ public class S053_BroadcastExample {
                                         .append(value)
                                         .append(" Broadcast State=[");
 
-                                for (Map.Entry<String, Integer> entry : ctx.getBroadcastState(localMapStateDescriptor).immutableEntries()) {
+                                for (Map.Entry<String, String> entry : ctx.getBroadcastState(localMapStateDescriptor).immutableEntries()) {
                                     str
                                             .append(entry.getKey())
                                             .append("->")
@@ -112,8 +109,8 @@ public class S053_BroadcastExample {
                             }
 
                             @Override
-                            public void processBroadcastElement(String value, KeyedBroadcastProcessFunction<String, Tuple2<Integer, Integer>, String, String>.Context ctx, Collector<String> out) throws Exception {
-                                ctx.getBroadcastState(localMapStateDescriptor).put(value, Integer.valueOf(value));
+                            public void processBroadcastElement(String value, KeyedBroadcastProcessFunction<String, Tuple2<String, String>, String, String>.Context ctx, Collector<String> out) throws Exception {
+                                ctx.getBroadcastState(localMapStateDescriptor).put(value, value);
 
                                 ctx.applyToKeyedState(valueState, new KeyedStateFunction<String, ValueState<String>>() {
                                     @Override
@@ -128,9 +125,9 @@ public class S053_BroadcastExample {
                             private final ValueStateDescriptor<String> valueState =
                                     new ValueStateDescriptor<>("any", BasicTypeInfo.STRING_TYPE_INFO);
 
-                            private final MapStateDescriptor<String, Integer> localMapStateDescriptor =
+                            private final MapStateDescriptor<String, String> localMapStateDescriptor =
                                     new MapStateDescriptor<>(
-                                            "Broadcast", BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.INT_TYPE_INFO
+                                            "Broadcast", BasicTypeInfo.STRING_TYPE_INFO, BasicTypeInfo.STRING_TYPE_INFO
                                     );
 
 
