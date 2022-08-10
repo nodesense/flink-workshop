@@ -1,10 +1,28 @@
 
 # setup 
+
  
 ```
 sudo apt install openjdk-11-jdk
+```
+
+# docker compose 
+
 
 ```
+git clone https://github.com/nodesense/fastdata-stack fastdata
+```
+
+https://github.com/nodesense/fastdata-stack
+Follow the instruction in the above live
+
+
+```
+git clone https://github.com/nodesense/flink-workshop flink-workshop-demo
+```
+
+Create new project using intellij with existing source, use maven as project type
+
 
 ```
 sudo nano /etc/hosts
@@ -24,6 +42,10 @@ Ctrl + X to exit
 127.0.0.1 hive-metastore
 ```
  
+# Jars
+#### when needed, to get the files to be downloaded, kept in jars location either in docker compose or local flink jars location
+note, change -P location based on where you want the files to be copied..
+
 
 ```
 wget -P mount/jars https://repo1.maven.org/maven2/org/apache/flink/flink-connector-jdbc/1.15.0/flink-connector-jdbc-1.15.0.jar
