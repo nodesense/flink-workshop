@@ -69,7 +69,7 @@ public class UserPageViewsJoin {
         WatermarkStrategy<User> userWatermarkStrategy =  WatermarkStrategy
                 .<User>forBoundedOutOfOrderness(Duration.ofSeconds(2))
                 // .forMonotonousTimestamps()
-                .withTimestampAssigner((event, timestamp) -> event.registertime);
+                .withTimestampAssigner((event, timestamp) -> event.event_time.getTime());
 
         DataStream<User> userDataStream = tableEnv.toDataStream(usersKafkaTable, User.class)
                 .assignTimestampsAndWatermarks(userWatermarkStrategy);
@@ -87,7 +87,7 @@ public class UserPageViewsJoin {
         WatermarkStrategy<PageView> pageViewWatermarkStrategy =  WatermarkStrategy
                 .<PageView>forBoundedOutOfOrderness(Duration.ofSeconds(2))
                 // .forMonotonousTimestamps()
-                .withTimestampAssigner((event, timestamp) -> event.viewtime);
+                .withTimestampAssigner((event, timestamp) -> event.event_time.getTime());
 
         DataStream<PageView> pageviewDataStream = tableEnv.toDataStream(pageViewKafkaTable, PageView.class)
                         .assignTimestampsAndWatermarks(pageViewWatermarkStrategy);
@@ -95,14 +95,14 @@ public class UserPageViewsJoin {
 
 
 
-        userDataStream.print();
-        pageviewDataStream.print();
+        //userDataStream.print();
+      //  pageviewDataStream.print();
 
         DataStream<PageViewUser> userPageViewStream = pageviewDataStream // left
                 .join(userDataStream) // right
                 .where (pageView -> pageView.userid) // left
                 .equalTo(user -> user.userid) // right
-                .window(TumblingEventTimeWindows.of(Time.minutes(5)))
+                .window(TumblingEventTimeWindows.of(Time.minutes(1)))
                         .apply(new JoinFunction<PageView, User, PageViewUser>() {
                             @Override
                             public PageViewUser join(PageView pageView, User user) throws Exception {
@@ -112,6 +112,7 @@ public class UserPageViewsJoin {
                                 pageViewUser.regionid = user.regionid;
                                 pageViewUser.pageid = pageView.pageid;
                                 pageViewUser.viewtime = pageView.viewtime;
+                                System.out.println("PageViewUser " + pageViewUser);
                                 return pageViewUser;
                             }
                         });
