@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS PageViewKafka (
+   `event_time` TIMESTAMP(3) METADATA FROM 'timestamp',
     viewtime BIGINT,
     userid STRING,
     pageid STRING
