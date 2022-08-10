@@ -102,7 +102,8 @@ public class UserPageViewsJoin {
                 .join(userDataStream) // right
                 .where (pageView -> pageView.userid) // left
                 .equalTo(user -> user.userid) // right
-                .window(TumblingEventTimeWindows.of(Time.minutes(1)))
+              //  .window(TumblingEventTimeWindows.of(Time.minutes(1)))
+                 .window(TumblingProcessingTimeWindows.of(Time.minutes(1)))
                         .apply(new JoinFunction<PageView, User, PageViewUser>() {
                             @Override
                             public PageViewUser join(PageView pageView, User user) throws Exception {
