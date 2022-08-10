@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS UserKafka (
+    `event_time` TIMESTAMP(3) METADATA FROM 'timestamp',
     registertime BIGINT,
     userid STRING,
     regionid STRING,
